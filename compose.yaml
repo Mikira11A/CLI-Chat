@@ -1,0 +1,30 @@
+name: node_chatroom
+networks:
+  node_chatroom_network:
+services:
+  node_chatroom_backend:
+    build: .
+    container_name: node_chatroom_backend
+    volumes:
+      - ./chatroom:/home/node/chatroom
+    ports:
+      - "127.0.0.1:1775:1775"
+    networks:
+      - node_chatroom_network
+
+  node_chatroom_caddy:
+    image: caddy:2.11.4-alpine
+    container_name: node_chatroom_caddy
+    volumes:
+      - ./Caddyfile:/etc/caddy/Caddyfile
+      - caddy_data:/data
+      - caddy_config:/config
+    ports:
+      - "80:80"
+      - "443:443"
+    networks:
+      - node_chatroom_network
+
+volumes:
+  caddy_data:
+  caddy_config:
