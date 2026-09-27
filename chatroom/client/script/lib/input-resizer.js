@@ -1,7 +1,5 @@
 class InputResizer {
-    constructor(inputElement) {
-        this.inputElement = inputElement
-
+    constructor() {
         this.canvas = document.createElement("canvas")
         this.ctx    = this.canvas.getContext("2d")
     }
@@ -18,6 +16,12 @@ class InputResizer {
         const extraSpacing = Math.max(0, input.value.length - 1) * letterSpacing
 
         input.style.width = `${textWidth + extraSpacing + paddingLeft + 2}px`
+    }
+
+    initInput(input) {
+        input.addEventListener("input", (event) => {
+            this.run(event.target)
+        })
     }
 }
 

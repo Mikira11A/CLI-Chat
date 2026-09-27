@@ -1,12 +1,5 @@
-import InputResizer from "./lib/input-resizer.js"
-import View from "./view.js"
+import CLIController from "./cli-controller.js"
 
-const inputResizer = new InputResizer()
-const view = new View()
+const cli = new CLIController()
 
-window._VIEW = view
-
-let main_input = document.getElementById("main-input")
-main_input.addEventListener("input", (event) => {
-  inputResizer.run(event.target)
-})
+cli.initInput()

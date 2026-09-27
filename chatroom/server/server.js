@@ -17,6 +17,7 @@ class Server {
     this.router.registerFile("/script/index.js", "text/javascript")
     this.router.registerFile("/script/lib/input-resizer.js", "text/javascript")
     this.router.registerFile("/script/view.js", "text/javascript")
+    this.router.registerFile("/script/cli-controller.js", "text/javascript")
 
     this.router.registerFile("/style/bundle.css", "text/css")
     this.router.registerFile("/style/general.css", "text/css")

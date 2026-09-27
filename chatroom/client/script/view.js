@@ -1,6 +1,12 @@
+import InputResizer from "./lib/input-resizer.js"
+
 class View {
     constructor() {
         this.logContainer = document.getElementById('log-container')
+        this.main_input   = document.getElementById("main-input")
+
+        this.input_resizer = new InputResizer()
+        this.input_resizer.initInput(this.main_input)
     }
 
     clearAll() {
