@@ -2,10 +2,15 @@
   "name" : "node_chatroom",
   "type": "module",
 
+  "dependencies": {
+    "ws": "^8.22.0"
+  },
+
   "devDependencies": {
     "nodemon": "^3.0.0"
   },
   "scripts": {
-    "dev": "nodemon --legacy-watch --watch chatroom chatroom/server/server.js"
+    "dev": "nodemon --legacy-watch --watch chatroom chatroom/server/server.js",
+    "dev-inspect": "nodemon --legacy-watch --watch chatroom --inspect-brk=0.0.0.0:9229 chatroom/server/server.js"
   }
 }

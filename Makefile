@@ -13,3 +13,7 @@ docker-run-shell: $(STAMP)
 docker-run-dev: $(STAMP)
 	docker run -it --rm  --mount type=bind,source="$(CURDIR)/chatroom",target="/home/node/chatroom" -p 1775:1775 --name $(IMAGE) $(IMAGE) npm run dev
 
+.PHONY: docker-run-inspect
+docker-run-inspect: $(STAMP)
+	docker run -it --rm  --mount type=bind,source="$(CURDIR)/chatroom",target="/home/node/chatroom" -p 1775:1775 -p 9229:9229 --name $(IMAGE) $(IMAGE) npm run dev-inspect
+
