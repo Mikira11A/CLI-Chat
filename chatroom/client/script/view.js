@@ -13,14 +13,30 @@ class View {
         this.logContainer.innerHTML = ''
     }
 
-    printMessage(text) {
+    printMessage(type, text) {
         const messageElement = document.createElement('div')
         messageElement.textContent = text
+        switch(type) {
+            case "message": {}
+            default: {break}
+            case "error": {
+                messageElement.style.color = "red"
+                break
+            }
+            case "success": {
+                messageElement.style.color = "green"
+                break
+            }
+        }
         this.logContainer.appendChild(messageElement)
     }
 
     formMessage(user, text) {
         return `[${user}] ${text}`
+    }
+
+    setTitle(title) {
+        document.title = title
     }
 }
 

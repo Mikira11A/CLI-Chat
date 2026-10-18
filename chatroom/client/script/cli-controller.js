@@ -5,9 +5,10 @@ class CLIController {
         this.view = new View()
         this.commands = {}
         this.user_name = "unknown"
+        this.room = undefined
         //this.WS_URL = 'wss://amtybe.duckdns.org'
         this.WS_URL = 'ws://localhost:1775'
-        this.ws
+        this.ws = undefined
 
 
         this.loadComands()
@@ -19,12 +20,27 @@ class CLIController {
                 this.view.clearAll()
             }
         )
+        this.registerCommand("exit", 
+            (args) => {
+                if (this.ws.readyState === WebSocket.CLOSED || this.ws.readyState === WebSocket.CLOSING) {
+                    this.print("SYSTEM", "message", `DISCONNECTING FROM ${this.room}`)
+                    this.ws.close()
+                } else {
+
+                }
+            }
+        )
         this.registerCommand("join", 
             (args) => {
-                //this.printCommon(`${args[0]} | ${args[1]}`)
+
+                if(this.room === args[0] && this.user_name === args[1]) {
+                    this.print("SYSTEM", "error", `MIRACULOUSLY YOU ALREADY THERE`)
+                    return
+                }
+
                 this.ws = new WebSocket(this.WS_URL)
                 this.ws.addEventListener('error', () => {
-                    this.printCommonError("connection failed")
+                    this.print("SYSTEM", "error", "FAILED TO CONNECT")
                 })
 
                 this.ws.addEventListener('open', () => {
@@ -35,8 +51,45 @@ class CLIController {
                      }))
 
 
-                    this.ws.addEventListener('message', (event) => {
-                        this.printCommon(JSON.stringify(event.data))
+                    this.ws.addEventListener('message',async (event) => {
+                        let msg
+                        try { 
+                            msg = JSON.parse(event.data) 
+                        } catch {
+                            this.print("SYSTEM", "error", "FAILED TO RECIEVE MESSAGE")
+                            return
+                        }
+                        console.log(msg)
+
+                        if(msg.user === undefined || msg.message === undefined || msg.type === undefined || msg.code === undefined) {
+                            this.print("SYSTEM", "error", "INVALID MESSAGE RECIEVED")
+                            return
+                        }
+                        switch(msg.code) {
+                            default: {
+                                this.print(msg.user, msg.type, msg.message)
+                                break
+                            }
+                            case 50: {
+                                if (this.ws.readyState !== WebSocket.CLOSED || this.ws.readyState !== WebSocket.CLOSING) {
+                                    if(this.room !== undefined && this.user_name !== "unknown") {
+                                        this.print("SYSTEM", "message", `DISCONNECTING FROM ${this.room}...`)
+                                        await this.closeWebSocket(this.ws)
+                                    }
+                                }
+                                this.print(msg.user, msg.type, msg.message)
+                                this.view.setTitle(msg.data.room)
+                                this.room = msg.data.room
+                                this.user_name = msg.data.user
+                                break
+                            }
+                        }
+                    })
+
+                    this.ws.addEventListener("close", (event) => {
+                        this.user_name = "unknown"
+                        this.room = undefined
+                        this.print("SYSTEM", "error", `CONNECTION TERMINATED`)
                     })
 
                 })
@@ -52,7 +105,7 @@ class CLIController {
                 if (message.startsWith("/")) {
                     this.parseCommand(message)                
                 } else {
-                    this.printCommon(message)
+                    this.print(this.user_name, "message", message)
                 }
 
                 event.currentTarget.value = ""
@@ -78,24 +131,28 @@ class CLIController {
         this.commands[command] = func
     }
 
+    closeWebSocket(ws) {
+        return new Promise((resolve) => {
+            if (ws.readyState === WebSocket.CLOSED) {
+                resolve()
+                return
+            }
+            ws.addEventListener('close', resolve, { once: true })
+            ws.close()
+        })
+    }
+
     //==========================================
 
-    printCommon(message) {
-        this.view.printMessage(
+    print(source, type, message) {
+        this.view.printMessage( type,
             this.view.formMessage(
-                this.user_name,
+                source,
                 message
             )
         )
     }
-    printCommonError(message) {
-        this.view.printMessage(
-            this.view.formMessage(
-                `system`,
-                message
-            )
-        )
-    }
+    
 }
 
 export default CLIController

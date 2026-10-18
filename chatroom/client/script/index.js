@@ -1,5 +1,5 @@
 import CLIController from "./cli-controller.js"
 
-const cli = new CLIController()
+window.cli = new CLIController()
 
-cli.initInput()
+window.cli.initInput()
