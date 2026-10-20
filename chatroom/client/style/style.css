@@ -1,9 +1,12 @@
+body {
+    background-color: #000000;
+}
+
 .main-container {
     display: flex;
     flex-direction: column;
     height: 100vh;
     width: 100vw;
-    background-color: #000000;
     position: relative;
 
     padding-bottom: 4px;
@@ -11,11 +14,25 @@
     padding-right:  6px;
 
     /* border: 2px solid #ff0000; */
+    padding: 6px 3px;
+
 }
 
 .log-container {
     flex-grow: 0;
     /* border: 2px solid #0000ff; */
+}
+.log-container > div {
+    display: flex;
+}
+.log-label {
+    flex-grow: 0;
+    white-space: nowrap;
+    color: inherit;
+}
+.log-message {
+    flex-grow: 1;
+    color: inherit;
 }
 
 .input-container {
@@ -38,8 +55,11 @@
     /* border: 1px solid red; */
     z-index: 1;
     padding-left: 2px;
-    width: 2px;
+    /* width: 2px; */
+    /* width: 100%; */
+    font: inherit;
     font-size: inherit;
+    flex-grow: 1;
 }
 
 #input-mirror {

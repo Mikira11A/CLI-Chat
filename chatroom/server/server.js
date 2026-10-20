@@ -54,7 +54,11 @@ class Server {
     this.router.registerFile("/style/bundle.css",  "text/css")
     this.router.registerFile("/style/general.css", "text/css")
     this.router.registerFile("/style/style.css",   "text/css")
-    this.router.registerFile("/style/blip.css",    "text/css")
+    // this.router.registerFile("/style/blip.css",    "text/css")
+
+    this.router.registerFile("/fonts/bedstead/bedstead-bold.otf",    "font/otf")
+    this.router.registerFile("/fonts/bedstead/bedstead.otf",    "font/otf")
+
   }
 
   initServer() {

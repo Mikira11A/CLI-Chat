@@ -22,7 +22,7 @@ class CLIController {
         )
         this.registerCommand("exit", 
             (args) => {
-                if (this.ws.readyState === WebSocket.CLOSED || this.ws.readyState === WebSocket.CLOSING) {
+                if (this.ws.readyState !== WebSocket.CLOSED || this.ws.readyState !== WebSocket.CLOSING) {
                     this.print("SYSTEM", "message", `DISCONNECTING FROM ${this.room}`)
                     this.ws.close()
                 } else {
@@ -106,10 +106,10 @@ class CLIController {
                     this.parseCommand(message)                
                 } else {
                     this.print(this.user_name, "message", message)
-                }
-
+                }  
+                
                 event.currentTarget.value = ""
-                this.view.input_resizer.run(this.view.main_input)
+                event.preventDefault()
             }
         });
     }
@@ -124,7 +124,7 @@ class CLIController {
         if(func != undefined)
             func(args)
         else {
-            this.printCommonError(`unknown command: ${command}`)
+            this.print("SYSTEM", "error", `UNKNOWN COMMAND: ${command}`)
         }
     }
     registerCommand(command, func) {
@@ -145,11 +145,10 @@ class CLIController {
     //==========================================
 
     print(source, type, message) {
-        this.view.printMessage( type,
-            this.view.formMessage(
-                source,
-                message
-            )
+        this.view.printMessage( 
+            type,
+            source,
+            message
         )
     }
     
